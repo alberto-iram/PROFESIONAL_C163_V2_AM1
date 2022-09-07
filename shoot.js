@@ -26,22 +26,22 @@ AFRAME.registerComponent("bullets", {
 
         var camera = document.querySelector("#camera").object3D;
 
-        //get the camera direction as Three.js Vector
+        //Obtener la dirección de la cámara como un vector de Three.js
         var direction = new THREE.Vector3();
         camera.getWorldDirection(direction);
 
-        //set the velocity and it's direction
+        //Establecer la velocidad y su dirección
         bullet.setAttribute("velocity", direction.multiplyScalar(-10));
 
         var scene = document.querySelector("#scene");
 
-        //set the bullet as the dynamic entity
+        //Establecer la bala como una entidad dinámica
         bullet.setAttribute("dynamic-body", {
           shape: "sphere",
           mass: "0",
         });
 
-        //add the collide event listener to the bullet
+        //Agregar un escucha de eventos de colisión a la bala
         bullet.addEventListener("collide", this.removeBullet);
 
         scene.appendChild(bullet);
@@ -49,10 +49,10 @@ AFRAME.registerComponent("bullets", {
     });
   },
   removeBullet: function (e) {
-    //bullet element
+    //Elemento de la bala
     var element = e.detail.target.el;
 
-    //element which is hit
+    //Elemento que es golpeado
     var elementHit = e.detail.body.el;
 
     if (elementHit.id.includes("box")) {
@@ -61,7 +61,7 @@ AFRAME.registerComponent("bullets", {
         transparent: true,
       });
 
-      //impulse and point vector
+      //Impulso y vector punto
       var impulse = new CANNON.Vec3(-2, 2, 1);
       var worldPoint = new CANNON.Vec3().copy(
         elementHit.getAttribute("position")
@@ -69,10 +69,10 @@ AFRAME.registerComponent("bullets", {
 
       elementHit.body.applyImpulse(impulse, worldPoint);
 
-      //remove event listener
+      //Eliminar escucha de evento
       element.removeEventListener("collide", this.removeBullet);
 
-      //remove the bullets from the scene
+      //Remover las balas de la escena
       var scene = document.querySelector("#scene");
       scene.removeChild(element);
     }
